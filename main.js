@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const { renderFile } = require('./lib/renderer');
 const { watchFolder } = require('./lib/watcher');
+const { startPreview } = require('./lib/preview');
 
 let mainWindow;
 
@@ -54,6 +55,7 @@ ipcMain.handle('dialog:openFolder', async () => {
   }
 
   watchFolder(folderPath, outputDir);
+  startPreview(outputDir);
 
   return folderPath;
 });

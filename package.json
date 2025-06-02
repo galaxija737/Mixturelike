@@ -13,6 +13,10 @@
   },
   "dependencies": {
     "chokidar": "^4.0.3",
-    "liquidjs": "^10.21.1"
+    "connect": "^3.7.0",
+    "liquidjs": "^10.21.1",
+    "livereload": "^0.9.3",
+    "open": "^10.1.2",
+    "serve-static": "^2.2.0"
   }
 }
