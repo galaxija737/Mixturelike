@@ -5,6 +5,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   readFolder: (path) => ipcRenderer.invoke('fs:readFolder', path),
   getProjectInfo: () => ipcRenderer.invoke('project:getInfo'),
   getProjectHistory: () => ipcRenderer.invoke('project:getHistory'),
-  openProjectByPath: (path) => ipcRenderer.invoke('project:openByPath', path)
-
+  openProjectByPath: (path) => ipcRenderer.invoke('project:openByPath', path),
+  updateProjectPath: (oldPath) => ipcRenderer.invoke('project:updatePath', oldPath),
+  createFromBoilerplate: (name, targetPath) => ipcRenderer.invoke('project:createFromBoilerplate', name, targetPath)
+  
 });

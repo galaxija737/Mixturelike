@@ -42,7 +42,10 @@
       li.textContent = file;
       fileList.appendChild(li);
     });
+    // ✅ FIX: update project history list immediately
+    loadProjectHistory();
   });
+
   async function loadProjectHistory() {
     const recentList = document.getElementById('recent-projects');
     const history = await window.electronAPI.getProjectHistory();
@@ -53,26 +56,55 @@
       li.textContent = `${p.name} — ${p.path}`;
       li.style.cursor = 'pointer';
       li.onclick = async () => {
-        const config = await window.electronAPI.openProjectByPath(p.path);
-        document.getElementById('project-info').innerHTML = `
-          <strong>Project Name:</strong> ${config.name}<br>
-          <strong>Path:</strong> ${config.path}
-        `;
+        let pathToOpen = p.path;
+        try {
+          const config = await window.electronAPI.openProjectByPath(pathToOpen);
 
-        const files = await window.electronAPI.readFolder(p.path);
-        const fileList = document.getElementById('file-list');
-        fileList.innerHTML = '';
-        files.forEach(file => {
-          const f = document.createElement('li');
-          f.textContent = file;
-          fileList.appendChild(f);
-        });
+          document.getElementById('project-info').innerHTML = `
+            <strong>Project Name:</strong> ${config.name}<br>
+            <strong>Path:</strong> ${config.path}
+          `;
+
+          const files = await window.electronAPI.readFolder(pathToOpen);
+          const fileList = document.getElementById('file-list');
+          fileList.innerHTML = '';
+          files.forEach(file => {
+            const f = document.createElement('li');
+            f.textContent = file;
+            fileList.appendChild(f);
+          });
+
+        } catch (e) {
+          const retry = confirm(`Project folder not found at:\n${p.path}\n\nWould you like to locate it?`);
+          if (retry) {
+            const newPath = await window.electronAPI.updateProjectPath(p.id);
+            if (newPath) {
+              alert('Path updated. Please click the project again.');
+              loadProjectHistory(); // ✅ refresh list
+
+              // Optional: auto-open project after path update
+              const config = await window.electronAPI.openProjectByPath(newPath);
+              const files = await window.electronAPI.readFolder(newPath);
+
+              document.getElementById('project-info').innerHTML = `
+                <strong>Project Name:</strong> ${config.name}<br>
+                <strong>Path:</strong> ${config.path}
+              `;
+
+              const fileList = document.getElementById('file-list');
+              fileList.innerHTML = '';
+              files.forEach(file => {
+                const li = document.createElement('li');
+                li.textContent = file;
+                fileList.appendChild(li);
+              });
+            }
+          }
+        }
       };
       recentList.appendChild(li);
     });
   }
-
-
 loadProjectHistory(); // call on startup
 </script>
 
