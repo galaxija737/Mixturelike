@@ -9,6 +9,8 @@ const {
   createConfig,
   readConfig
 } = require('./lib/projectConfig');
+const { loadProjects, addOrUpdateProject } = require('./lib/projectStore');
+
 
 let mainWindow;
 let currentProjectConfig = null; // holds last loaded project config
@@ -61,6 +63,7 @@ ipcMain.handle('dialog:openFolder', async () => {
   }
 
   currentProjectConfig = config;
+  addOrUpdateProject(config);
 
   // Render all .liquid and compile .scss
   const files = fs.readdirSync(folderPath);
@@ -94,4 +97,45 @@ ipcMain.handle('fs:readFolder', async (event, folderPath) => {
 
 ipcMain.handle('project:getInfo', () => {
   return currentProjectConfig;
+});
+
+ipcMain.handle('project:getHistory', () => {
+  return loadProjects();
+});
+
+ipcMain.handle('project:openByPath', async (event, folderPath) => {
+  const outputDir = path.join(__dirname, 'renderer/output');
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  // Load or create config
+  let config;
+  if (configExists(folderPath)) {
+    config = readConfig(folderPath);
+    console.log(`📂 Loaded project config: ${config.name}`);
+  } else {
+    const projectName = path.basename(folderPath);
+    config = createConfig(folderPath, projectName);
+    console.log(`🆕 Created config for: ${projectName}`);
+  }
+
+  currentProjectConfig = config;
+  addOrUpdateProject(config);
+
+  // Process files
+  const files = fs.readdirSync(folderPath);
+  for (const file of files) {
+    const fullPath = path.join(folderPath, file);
+    const ext = path.extname(file);
+
+    if (ext === '.liquid') {
+      await renderFile(fullPath, outputDir, folderPath);
+    } else if (ext === '.scss') {
+      compileSCSS(fullPath, outputDir);
+    }
+  }
+
+  watchFolder(folderPath, outputDir);
+  startPreview(outputDir);
+
+  return config;
 });

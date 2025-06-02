@@ -12,6 +12,9 @@
 <p id="folder-path"></p>
 <ul id="file-list"></ul>
 
+<h2>Recent Projects</h2>
+<ul id="recent-projects"></ul>
+
 <script>
   const openBtn = document.getElementById('open-folder');
   const pathDisplay = document.getElementById('folder-path');
@@ -40,6 +43,37 @@
       fileList.appendChild(li);
     });
   });
+  async function loadProjectHistory() {
+    const recentList = document.getElementById('recent-projects');
+    const history = await window.electronAPI.getProjectHistory();
+
+    recentList.innerHTML = '';
+    history.forEach(p => {
+      const li = document.createElement('li');
+      li.textContent = `${p.name} — ${p.path}`;
+      li.style.cursor = 'pointer';
+      li.onclick = async () => {
+        const config = await window.electronAPI.openProjectByPath(p.path);
+        document.getElementById('project-info').innerHTML = `
+          <strong>Project Name:</strong> ${config.name}<br>
+          <strong>Path:</strong> ${config.path}
+        `;
+
+        const files = await window.electronAPI.readFolder(p.path);
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+        files.forEach(file => {
+          const f = document.createElement('li');
+          f.textContent = file;
+          fileList.appendChild(f);
+        });
+      };
+      recentList.appendChild(li);
+    });
+  }
+
+
+loadProjectHistory(); // call on startup
 </script>
 
 </body>
