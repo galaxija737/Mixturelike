@@ -38,6 +38,8 @@
    npm start
     ```
 
+---
+
 ## Roadmap
 
 The goal is to evolve Mixturelike into a powerful front-end project manager and live preview tool similar to Mixture.app. Planned features include:
@@ -50,6 +52,8 @@ The goal is to evolve Mixturelike into a powerful front-end project manager and 
 - Static Site Export: Export fully compiled static websites ready for deployment
 - Plugin System: Extend app functionality with third-party plugins and integrations
 - Cross-platform Packaging: Build native installers for Windows, macOS, and Linux
+
+---
 
 ## Contributions & Feedback
 
