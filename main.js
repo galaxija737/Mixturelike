@@ -28,7 +28,7 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile('renderer/index.html');
+  mainWindow.loadFile('index.html');
 }
 
 app.whenReady().then(() => {
@@ -92,6 +92,12 @@ ipcMain.handle('dialog:openFolder', async () => {
   const folderPath = result.filePaths[0];
   await openProject(folderPath);
   return folderPath;
+});
+
+// Select project folder manually (for boilerplate creation)
+ipcMain.handle('dialog:selectFolder', async () => {
+  const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+  return result.canceled || result.filePaths.length === 0 ? null : result.filePaths[0];
 });
 
 // Open project from saved path

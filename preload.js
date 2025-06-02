@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   openFolder: () => ipcRenderer.invoke('dialog:openFolder'),
+  selectFolder: () => ipcRenderer.invoke('dialog:selectFolder'), // ✅ ADD THIS
   readFolder: (path) => ipcRenderer.invoke('fs:readFolder', path),
   getProjectInfo: () => ipcRenderer.invoke('project:getInfo'),
   getProjectHistory: () => ipcRenderer.invoke('project:getHistory'),

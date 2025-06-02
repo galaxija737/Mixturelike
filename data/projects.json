@@ -1,9 +1,21 @@
 [
   {
+    "id": "7ed2a57c-1ac3-4868-ad89-7ba8fa53141f",
+    "name": "Newest test",
+    "path": "F:\\GitRepos\\Newest test",
+    "lastOpened": "2025-06-02T11:09:32.982Z"
+  },
+  {
+    "id": "3102bba9-cbff-40d5-860d-8fe944c19e28",
+    "name": "New boilertest",
+    "path": "F:\\GitRepos\\New boilertest",
+    "lastOpened": "2025-06-02T11:02:15.542Z"
+  },
+  {
     "id": "a334db6a-92f8-4ac1-a500-afc1c0bc6ca7",
     "name": "Dummy folder",
     "path": "F:\\GitRepos\\Dummy folder",
-    "lastOpened": "2025-06-02T09:35:04.113Z"
+    "lastOpened": "2025-06-02T10:49:43.681Z"
   },
   {
     "id": "c41012b5-035c-46cf-b1f3-c33c93f09d21",

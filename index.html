@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mixturelike</title>
+</head>
+<body>
+  <h1>Mixturelike</h1>
+
+  <section>
+    <button id="open-folder">Open Existing Project</button>
+    <button id="create-bootstrap-btn">Create Bootstrap Project</button>
+    <p id="folder-path"></p>
+    <div id="project-info"></div>
+    <ul id="file-list"></ul>
+  </section>
+
+  <hr />
+
+  <section>
+    <h2>Recent Projects</h2>
+    <ul id="recent-projects"></ul>
+  </section>
+
+  <script type="module">
+    import { openProjectAndRenderUI } from './renderer/projectManager.js';
+    import { loadProjectHistory } from './renderer/history.js';
+    import { createBoilerplateProject } from './renderer/boilerplate.js';
+
+    const openBtn = document.getElementById('open-folder');
+    const bootstrapBtn = document.getElementById('create-bootstrap-btn');
+    const pathDisplay = document.getElementById('folder-path');
+
+    openBtn.addEventListener('click', async () => {
+      const folderPath = await window.electronAPI.openFolder();
+      if (!folderPath) {
+        pathDisplay.textContent = 'No folder selected.';
+        return;
+      }
+      pathDisplay.textContent = `Selected folder: ${folderPath}`;
+      await openProjectAndRenderUI(folderPath);
+      await loadProjectHistory(handleRecentProjectClick);
+    });
+
+    bootstrapBtn.addEventListener('click', async () => {
+      const folderPath = await window.electronAPI.selectFolder();
+      if (!folderPath) return;
+
+      const config = await createBoilerplateProject('liquid-bootstrap', folderPath);
+      if (config) {
+        // ✅ Open project by path so it's set as currentProject
+        await window.electronAPI.openProjectByPath(folderPath);
+
+        // ✅ Render the UI for the new project
+        await openProjectAndRenderUI(folderPath);
+
+        // ✅ Reload the project list
+        await loadProjectHistory(handleRecentProjectClick);
+      }
+    });
+
+    async function handleRecentProjectClick(project) {
+      try {
+        await window.electronAPI.openProjectByPath(project.path);
+        await openProjectAndRenderUI(project.path);
+      } catch (e) {
+        const retry = confirm(`Project folder not found at:\n${project.path}\n\nWould you like to locate it?`);
+        if (retry) {
+          const newPath = await window.electronAPI.updateProjectPath(project.id);
+          if (newPath) {
+            alert('Path updated.');
+            await window.electronAPI.openProjectByPath(newPath);
+            await openProjectAndRenderUI(newPath);
+            await loadProjectHistory(handleRecentProjectClick);
+          }
+        }
+      }
+    }
+
+    // Initial load
+    loadProjectHistory(handleRecentProjectClick);
+  </script>
+</body>
+</html>
