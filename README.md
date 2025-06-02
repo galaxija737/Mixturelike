@@ -29,14 +29,14 @@
     ```
 
 4. Start the SCSS watcher to compile SCSS on file changes:
- ```bash
-npm run watch:scss
- ```
+    ```bash
+   npm run watch:scss
+    ```
 
 5. In a new terminal window, start the Electron app:
- ```bash
-npm start
- ```
+    ```bash
+   npm start
+    ```
 
 ## Roadmap
 
