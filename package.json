@@ -1,0 +1,14 @@
+{
+  "name": "mixturelite",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:scss": "sass renderer/styles/main.scss renderer/output/styles.css",
+    "watch:scss": "sass --watch renderer/styles/main.scss:renderer/output/styles.css"
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "sass": "^1.75.0"
+  }
+}
