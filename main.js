@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { renderFile } = require('./lib/renderer');
-const { watchFolder } = require('./lib/watcher');
+const { compileSCSS, watchFolder } = require('./lib/watcher');
 const { startPreview } = require('./lib/preview');
 
 let mainWindow;
@@ -40,17 +40,19 @@ ipcMain.handle('dialog:openFolder', async () => {
   if (result.canceled || result.filePaths.length === 0) return null;
 
   const folderPath = result.filePaths[0];
-  const files = fs.readdirSync(folderPath);
   const outputDir = path.join(__dirname, 'renderer/output');
   fs.mkdirSync(outputDir, { recursive: true });
 
+  const files = fs.readdirSync(folderPath);
+
   for (const file of files) {
-    if (path.extname(file) === '.liquid') {
-      await renderFile(path.join(folderPath, file), outputDir);
-    }
-    if (path.extname(file) === '.scss') {
-      const { compileSCSS } = require('./lib/watcher');
-      compileSCSS(path.join(folderPath, file), outputDir);
+    const fullPath = path.join(folderPath, file);
+    const ext = path.extname(file);
+
+    if (ext === '.liquid') {
+      await renderFile(fullPath, outputDir, folderPath); // pass folderPath as project root
+    } else if (ext === '.scss') {
+      compileSCSS(fullPath, outputDir);
     }
   }
 
