@@ -23,6 +23,19 @@ app.whenReady().then(() => {
   });
 });
 
+const { ipcMain, dialog } = require('electron');
+
+ipcMain.handle('dialog:openFolder', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openDirectory']
+  });
+  if (result.canceled) {
+    return null;
+  } else {
+    return result.filePaths[0]; // return folder path
+  }
+});
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
