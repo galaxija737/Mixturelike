@@ -7,5 +7,21 @@
 <body>
   <h1>MixtureLite</h1>
   <p>This is a placeholder. File watcher and preview coming soon.</p>
+  <button id="open-folder">Select Project Folder</button>
+<p id="folder-path"></p>
+
+<script>
+  const openBtn = document.getElementById('open-folder');
+  const pathDisplay = document.getElementById('folder-path');
+
+  openBtn.addEventListener('click', async () => {
+    const folderPath = await window.electronAPI.openFolder();
+    if (folderPath) {
+      pathDisplay.textContent = `Selected folder: ${folderPath}`;
+    } else {
+      pathDisplay.textContent = 'No folder selected.';
+    }
+  });
+</script>
 </body>
 </html>
