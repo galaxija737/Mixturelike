@@ -14,9 +14,22 @@ const {
   addOrUpdateProject,
   updateProjectPath
 } = require('./lib/projectStore');
+const { removeProject } = require('./lib/projectHistory');
+const { createProjectFromBoilerplate } = require('./lib/boilerplate');
 
 let mainWindow;
 let currentProjectConfig = null;
+
+const boilerplateDefaults = {
+  'liquid-bootstrap': {
+    description: 'Sleek, intuitive, and powerful front-end framework for faster and easier web development.',
+    thumbnail: 'thumbnail.png'
+  },
+  'clean-slate': {
+    description: 'A blank canvas with minimal setup, ideal for custom work from scratch.',
+    thumbnail: 'thumbnail.png'
+  }
+};
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -137,20 +150,33 @@ ipcMain.handle('project:getHistory', () => {
   return loadProjects();
 });
 
-const { createProjectFromBoilerplate } = require('./lib/boilerplate');
-
-ipcMain.handle('project:createFromBoilerplate', async (event, boilerplateName, targetPath) => {
-  try {
-    createProjectFromBoilerplate(boilerplateName, targetPath);
-
-    // Create config right after
-    const config = createConfig(targetPath, path.basename(targetPath));
-    addOrUpdateProject(config);
-
-    return config;
-  } catch (err) {
-    console.error('Boilerplate creation failed:', err.message);
-    return null;
-  }
+// Remove project from the list
+ipcMain.handle('project:removeById', async (event, projectId) => {
+  removeProject(projectId);
 });
 
+// Create project from boilerplate
+ipcMain.handle('project:createFromBoilerplate', async (event, boilerplateName, targetPath) => {
+  createProjectFromBoilerplate(boilerplateName, targetPath);
+
+  const defaults = boilerplateDefaults[boilerplateName] || {};
+  const name = path.basename(targetPath);
+  
+  // Create config right after
+  const config = createConfig(
+    targetPath,
+    name,
+    boilerplateName,
+    defaults.description || '',
+    defaults.thumbnail || 'thumbnail.png'
+  );
+
+  addOrUpdateProject(config);
+  return config;
+});
+
+
+
+
+
+    // Create config right after

@@ -1,32 +1,47 @@
 [
   {
-    "id": "7ed2a57c-1ac3-4868-ad89-7ba8fa53141f",
-    "name": "Newest test",
-    "path": "F:\\GitRepos\\Newest test",
-    "lastOpened": "2025-06-02T11:09:32.982Z"
+    "id": "94d5859d-532f-4d97-a91f-6d7b744dec71",
+    "name": "some proj",
+    "path": "F:\\GitRepos\\some proj",
+    "boilerplate": "liquid-bootstrap",
+    "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
+    "thumbnail": "thumbnail.png",
+    "lastOpened": "2025-06-02T16:29:07.389Z"
   },
   {
-    "id": "3102bba9-cbff-40d5-860d-8fe944c19e28",
-    "name": "New boilertest",
-    "path": "F:\\GitRepos\\New boilertest",
-    "lastOpened": "2025-06-02T11:02:15.542Z"
+    "id": "ddcc95b4-0779-42a6-aa31-309a8d9f0476",
+    "name": "New folder",
+    "path": "F:\\GitRepos\\New folder",
+    "boilerplate": "liquid-bootstrap",
+    "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
+    "thumbnail": "thumbnail.png",
+    "lastOpened": "2025-06-02T16:04:11.494Z"
   },
   {
-    "id": "a334db6a-92f8-4ac1-a500-afc1c0bc6ca7",
+    "id": "b0aa978d-99cf-4030-9e1f-ca2b458df5fd",
+    "name": "With default values",
+    "path": "F:\\GitRepos\\With default values",
+    "boilerplate": "liquid-bootstrap",
+    "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
+    "thumbnail": "thumbnail.png",
+    "lastOpened": "2025-06-02T15:41:02.054Z"
+  },
+  {
+    "id": "fd334550-1b7c-4f8f-bfc2-bc6da95a17c3",
     "name": "Dummy folder",
     "path": "F:\\GitRepos\\Dummy folder",
-    "lastOpened": "2025-06-02T10:49:43.681Z"
+    "boilerplate": "",
+    "description": "",
+    "thumbnail": "thumbnail.png",
+    "lastOpened": "2025-06-02T15:25:20.510Z"
   },
   {
-    "id": "c41012b5-035c-46cf-b1f3-c33c93f09d21",
-    "name": "Test when moved folderinjo",
-    "path": "F:\\GitRepos\\Test when moved folderinjo",
-    "lastOpened": "2025-06-02T09:28:41.825Z"
-  },
-  {
-    "id": "a833060a-b0e9-4269-8520-684d8c069e24",
-    "name": "Test when moved folderasing",
-    "path": "F:\\GitRepos\\Test when moved folderasing",
-    "lastOpened": "2025-06-02T09:29:11.055Z"
+    "id": "7e3d92a4-a85e-4f19-a704-6e037487b818",
+    "name": "New with rich data",
+    "path": "F:\\GitRepos\\New with rich data",
+    "boilerplate": "",
+    "description": "Some short description",
+    "thumbnail": "thumbnail.png",
+    "lastOpened": "2025-06-02T15:41:46.114Z"
   }
 ]
