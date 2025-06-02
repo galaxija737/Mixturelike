@@ -10,5 +10,9 @@
   "devDependencies": {
     "electron": "^29.0.0",
     "sass": "^1.75.0"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "liquidjs": "^10.21.1"
   }
 }

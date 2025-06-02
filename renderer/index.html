@@ -9,18 +9,30 @@
   <p>This is a placeholder. File watcher and preview coming soon.</p>
   <button id="open-folder">Select Project Folder</button>
 <p id="folder-path"></p>
+<ul id="file-list"></ul>
 
 <script>
   const openBtn = document.getElementById('open-folder');
   const pathDisplay = document.getElementById('folder-path');
+  const fileList = document.getElementById('file-list');
 
   openBtn.addEventListener('click', async () => {
     const folderPath = await window.electronAPI.openFolder();
-    if (folderPath) {
-      pathDisplay.textContent = `Selected folder: ${folderPath}`;
-    } else {
+    if (!folderPath) {
       pathDisplay.textContent = 'No folder selected.';
+      fileList.innerHTML = '';
+      return;
     }
+
+    pathDisplay.textContent = `Selected folder: ${folderPath}`;
+    const files = await window.electronAPI.readFolder(folderPath);
+
+    fileList.innerHTML = ''; // clear existing list
+    files.forEach(file => {
+      const li = document.createElement('li');
+      li.textContent = file;
+      fileList.appendChild(li);
+    });
   });
 </script>
 </body>
