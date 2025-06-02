@@ -1,5 +1,7 @@
+import { renderProjectDetails } from './detailPane.js';
 export async function openProjectAndRenderUI(folderPath) {
   const config = await window.electronAPI.getProjectInfo();
+  renderProjectDetails(config);
   const files = await window.electronAPI.readFolder(folderPath);
 
   document.getElementById('project-info').innerHTML = `

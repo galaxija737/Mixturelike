@@ -8,7 +8,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getProjectHistory: () => ipcRenderer.invoke('project:getHistory'),
   openProjectByPath: (path) => ipcRenderer.invoke('project:openByPath', path),
   updateProjectPath: (oldPath) => ipcRenderer.invoke('project:updatePath', oldPath),
-  createFromBoilerplate: (name, targetPath) => ipcRenderer.invoke('project:createFromBoilerplate', name, targetPath),
+  createBoilerplateProject: (boilerplateName, targetPath) => ipcRenderer.invoke('project:createFromBoilerplate', boilerplateName, targetPath),
+  openInFileExplorer: (path) => shell.openPath(path),
   removeProjectById: (id) => ipcRenderer.invoke('project:removeById', id)
   
 });

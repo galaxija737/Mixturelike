@@ -2,128 +2,93 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Mixturelike</title>
+  <title>Mixturelike Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="./renderer/styles/appstyle.css" />
 </head>
-<body class="p-4">
-  <h1 class="mb-4">Mixturelike</h1>
-
-  <div class="mb-3">
-    <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-        Add New Project
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" id="add-existing">Add Existing Project</a></li>
-        <li><a class="dropdown-item" href="#" id="create-from-boilerplate">Create From Boilerplate</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div id="project-info" class="mb-3"></div>
-  <ul id="file-list" class="list-group mb-4"></ul>
-
-  <h3>Recent Projects</h3>
-  <ul id="recent-projects" class="list-group"></ul>
-
-  <!-- Modal -->
-  <div class="modal fade" id="boilerplateModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Create Project from Boilerplate</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<body>
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <!-- Sidebar -->
+    <div class="col-2 d-flex flex-column" id="sidebar">
+      <div class="flex-grow-1 overflow-auto">
+        <div class="nav flex-column" id="sidebar-nav">
+          <!-- Project list injected by JS -->
         </div>
-        <div class="modal-body">
-          <label>Boilerplate:</label>
-          <select id="boilerplate-select" class="form-select mb-2">
-            <option value="liquid-bootstrap">Liquid + Bootstrap</option>
-            <option value="clean-slate">Clean Slate</option>
-          </select>
-
-          <label>Description:</label>
-          <textarea id="project-description" class="form-control mb-2" rows="3"></textarea>
-
-          <label>Thumbnail:</label>
-          <input type="text" id="project-thumbnail" class="form-control" value="thumbnail.png">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="create-project-btn">Create Project</button>
+      </div>
+      <div class="sticky-footer">
+        <div class="dropdown w-100">
+          <button class="btn btn-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-plus-lg"></i> Add New Project
+          </button>
+          <ul class="dropdown-menu w-100">
+            <li><a class="dropdown-item" id="open-existing-project" href="#">Add Existing Project</a></li>
+            <li><a class="dropdown-item" id="open-boilerplate-modal" data-bs-toggle="modal" data-bs-target="#boilerplateModal" href="#">Create From Boilerplate</a></li>
+          </ul>
         </div>
       </div>
     </div>
+
+    <!-- Main Panel -->
+    <div class="col-10" id="project-details"></div>
+
+      <!-- Tabs -->
+      <ul class="nav nav-tabs" id="projectTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#logs" type="button">Logs</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#files" type="button">Files</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#packages" type="button">Packages</button>
+        </li>
+      </ul>
+      <div class="tab-content p-3 border border-top-0">
+        <div class="tab-pane fade show active" id="logs">Logs output will go here...</div>
+        <div class="tab-pane fade" id="files">Folder tree UI...</div>
+        <div class="tab-pane fade" id="packages">Detected packages info...</div>
+      </div>
+    </div>
   </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="boilerplateModal" tabindex="-1" aria-labelledby="boilerplateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="boilerplateModalLabel">Create Project from Boilerplate</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label for="boilerplate-select">Boilerplate:</label>
+        <select id="boilerplate-select" class="form-select mb-2">
+          <option value="liquid-bootstrap">Liquid + Bootstrap</option>
+          <option value="clean-slate">Clean Slate</option>
+        </select>
+
+        <label for="project-description">Description:</label>
+        <textarea id="project-description-input" class="form-control mb-2" rows="3" placeholder="Enter a short description"></textarea>
+
+        <label for="project-thumbnail">Thumbnail (filename):</label>
+        <input type="text" id="project-thumbnail-input" class="form-control" value="thumbnail.png">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="create-project-btn">Create Project</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <script type="module" src="./renderer/ui-handler.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script type="module">
-    import { openProjectAndRenderUI } from './renderer/projectManager.js';
-    import { loadProjectHistory } from './renderer/history.js';
-    import { createBoilerplateProject } from './renderer/boilerplate.js';
-
-    const openBtn = document.getElementById('open-folder');
-    const bootstrapBtn = document.getElementById('create-bootstrap-btn');
-    const pathDisplay = document.getElementById('folder-path');
-
-    openBtn.addEventListener('click', async () => {
-      const folderPath = await window.electronAPI.openFolder();
-      if (!folderPath) {
-        pathDisplay.textContent = 'No folder selected.';
-        return;
-      }
-      pathDisplay.textContent = `Selected folder: ${folderPath}`;
-      await openProjectAndRenderUI(folderPath);
-      await loadProjectHistory(handleRecentProjectClick);
-    });
-
-    bootstrapBtn.addEventListener('click', async () => {
-      const folderPath = await window.electronAPI.selectFolder();
-      if (!folderPath) return;
-
-      const boilerplate = document.getElementById('boilerplate-select').value;
-      const name = document.getElementById('project-name').value || 'Unnamed Project';
-      const description = document.getElementById('project-description').value || '';
-      const thumbnail = document.getElementById('project-thumbnail').value || 'thumbnail.png';
-
-      const config = await createBoilerplateProject(
-        boilerplate,
-        folderPath,
-        name,
-        description,
-        thumbnail
-      );
-
-      if (config) {
-        await window.electronAPI.openProjectByPath(folderPath);
-        await openProjectAndRenderUI(folderPath);
-        await loadProjectHistory(handleRecentProjectClick);
-      }
-    });
-
-    async function handleRecentProjectClick(project) {
-      try {
-        await window.electronAPI.openProjectByPath(project.path);
-        await openProjectAndRenderUI(project.path);
-      } catch (e) {
-        const retry = confirm(`Project folder not found at:
-${project.path}
-
-Would you like to locate it?`);
-        if (retry) {
-          const newPath = await window.electronAPI.updateProjectPath(project.id);
-          if (newPath) {
-            alert('Path updated.');
-            await window.electronAPI.openProjectByPath(newPath);
-            await openProjectAndRenderUI(newPath);
-            await loadProjectHistory(handleRecentProjectClick);
-          }
-        }
-      }
-    }
-
-    loadProjectHistory(handleRecentProjectClick);
-  </script>
+  import { setupEventHandlers } from './renderer/events.js';
+  setupEventHandlers();
+</script>
 </body>
 </html>

@@ -1,0 +1,40 @@
+body { 
+  height: 100vh;
+  overflow: hidden;
+}
+#sidebar {
+  height: 100%;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+  background-color: #f8f9fa;
+}
+#project-details {
+  height: 100%;
+  overflow-y: auto;
+  padding: 1rem;
+}
+.project-thumbnail {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 3px solid #ccc;
+}
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+}
+.nav-group-title {
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+}
+
+.nav-group-title {
+  text-transform: uppercase;
+  font-size: .8rem;
+  font-style: bold;
+  color: rgb(80, 80, 80);
+}

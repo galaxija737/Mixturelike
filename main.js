@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { renderFile } = require('./lib/renderer');
@@ -33,16 +33,21 @@ const boilerplateDefaults = {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 700,
+    width: 1440,
+    height: 1024,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true
     }
   });
 
+  // Load UI
   mainWindow.loadFile('index.html');
+
+  // ❌ Remove default menu bar
+  Menu.setApplicationMenu(null);
 }
+
 
 app.whenReady().then(() => {
   createWindow();
@@ -155,6 +160,11 @@ ipcMain.handle('project:removeById', async (event, projectId) => {
   removeProject(projectId);
 });
 
+// Open folder
+ipcMain.handle('openInFileExplorer', async (event, path) => {
+  await shell.openPath(path);
+});
+
 // Create project from boilerplate
 ipcMain.handle('project:createFromBoilerplate', async (event, boilerplateName, targetPath) => {
   createProjectFromBoilerplate(boilerplateName, targetPath);
@@ -174,9 +184,3 @@ ipcMain.handle('project:createFromBoilerplate', async (event, boilerplateName, t
   addOrUpdateProject(config);
   return config;
 });
-
-
-
-
-
-    // Create config right after
