@@ -4,8 +4,14 @@ const fs = require('fs');
 const { renderFile } = require('./lib/renderer');
 const { compileSCSS, watchFolder } = require('./lib/watcher');
 const { startPreview } = require('./lib/preview');
+const {
+  configExists,
+  createConfig,
+  readConfig
+} = require('./lib/projectConfig');
 
 let mainWindow;
+let currentProjectConfig = null; // holds last loaded project config
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -43,14 +49,27 @@ ipcMain.handle('dialog:openFolder', async () => {
   const outputDir = path.join(__dirname, 'renderer/output');
   fs.mkdirSync(outputDir, { recursive: true });
 
-  const files = fs.readdirSync(folderPath);
+  // Load or create .mlconfig.json
+  let config;
+  if (configExists(folderPath)) {
+    config = readConfig(folderPath);
+    console.log(`📂 Loaded project config: ${config.name}`);
+  } else {
+    const projectName = path.basename(folderPath);
+    config = createConfig(folderPath, projectName);
+    console.log(`🆕 Created config for: ${projectName}`);
+  }
 
+  currentProjectConfig = config;
+
+  // Render all .liquid and compile .scss
+  const files = fs.readdirSync(folderPath);
   for (const file of files) {
     const fullPath = path.join(folderPath, file);
     const ext = path.extname(file);
 
     if (ext === '.liquid') {
-      await renderFile(fullPath, outputDir, folderPath); // pass folderPath as project root
+      await renderFile(fullPath, outputDir, folderPath);
     } else if (ext === '.scss') {
       compileSCSS(fullPath, outputDir);
     }
@@ -71,4 +90,8 @@ ipcMain.handle('fs:readFolder', async (event, folderPath) => {
   } catch (err) {
     return [];
   }
+});
+
+ipcMain.handle('project:getInfo', () => {
+  return currentProjectConfig;
 });

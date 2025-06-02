@@ -5,6 +5,7 @@
   <title>MixtureLite</title>
 </head>
 <body>
+  <div id="project-info"></div>
   <h1>MixtureLite</h1>
   <p>This is a placeholder. File watcher and preview coming soon.</p>
   <button id="open-folder">Select Project Folder</button>
@@ -15,19 +16,24 @@
   const openBtn = document.getElementById('open-folder');
   const pathDisplay = document.getElementById('folder-path');
   const fileList = document.getElementById('file-list');
+  const projectInfo = document.getElementById('project-info');
 
   openBtn.addEventListener('click', async () => {
     const folderPath = await window.electronAPI.openFolder();
     if (!folderPath) {
       pathDisplay.textContent = 'No folder selected.';
       fileList.innerHTML = '';
+      projectInfo.textContent = '';
       return;
     }
 
     pathDisplay.textContent = `Selected folder: ${folderPath}`;
     const files = await window.electronAPI.readFolder(folderPath);
+    const config = await window.electronAPI.getProjectInfo();
 
-    fileList.innerHTML = ''; // clear existing list
+    projectInfo.innerHTML = `<strong>Project Name:</strong> ${config.name}<br><strong>Path:</strong> ${config.path}`;
+
+    fileList.innerHTML = '';
     files.forEach(file => {
       const li = document.createElement('li');
       li.textContent = file;
@@ -35,5 +41,6 @@
     });
   });
 </script>
+
 </body>
 </html>
