@@ -3,7 +3,7 @@ import { openProjectAndRenderUI } from './projectManager.js';
 import { loadProjectHistory } from './history.js';
 
 export async function renderSidebar(onSelectProject) {
-  const sidebar = document.querySelector('#sidebar-nav');
+  const sidebar = document.querySelector('#sidebar .nav');
   const history = await window.electronAPI.getProjectHistory();
 
   // Clear existing
